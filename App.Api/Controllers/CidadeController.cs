@@ -1,7 +1,6 @@
 ﻿using App.Domain.Entities;
 using App.Domain.Interfaces.Application;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,19 +10,22 @@ namespace App.Api.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class PessoaController : Controller
-    {
-        private IPessoaService _service;
 
-        public PessoaController(IPessoaService service)
+
+
+    public class CidadeController : Controller
+    {
+        private ICidadeService _service;
+
+        public CidadeController(ICidadeService service)
         {
             _service = service;
         }
 
-        [HttpGet("ListaPessoas")]
+        [HttpGet("ListaCidades")]
         public JsonResult ListaPessoas()
         {
-            return Json(_service.listaPessoas());
+            return Json(_service.listaCidades());
         }
         [HttpGet("BuscarPorId")]
         public JsonResult BuscarPorId(Guid id)
@@ -32,28 +34,26 @@ namespace App.Api.Controllers
 
         }
         [HttpPost("Salvar")]
-        public JsonResult Salvar(string nome, int peso, DateTime dataNascimento, bool ativo, Guid idCidade)
+        public JsonResult Salvar(string nome, string uf, string cep, Guid id)
         {
-        var obj = new Pessoa
-        {
-            Nome = nome,
-            DataNascimento = dataNascimento,
-            Peso = peso,
-            Ativo = ativo,
-            CidadeId = idCidade
-        };
-        _service.Salvar(obj);
+            var obj = new Cidade
+            {
+                Id = id,
+                Cep = cep,
+                Uf = uf,
+                Nome = nome,
+            };
+            _service.Salvar(obj);
             return Json(true);
-
         }
-       [HttpDelete("Deletar")]
-       public JsonResult Deletar(Guid id)
+        [HttpDelete("Deletar")]
+        public JsonResult Deletar(Guid id)
         {
             _service.Remover(id);
             return Json(true);
         }
-           
-
 
     }
 }
+
+
