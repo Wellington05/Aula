@@ -12,6 +12,8 @@ namespace App.Api
 {
     public class Startup
     {
+        private object bulder;
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -47,16 +49,14 @@ namespace App.Api
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "App.Api v1"));
             }
 
-            app.UseHttpsRedirection();
-
-            app.UseRouting();
-
-            app.UseAuthorization();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+            app.UseCors(builder => builder
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowAnyOrigin()
+            );
+           
+        
+            }
         }
     }
-}
+

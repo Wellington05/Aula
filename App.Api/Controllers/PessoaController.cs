@@ -1,5 +1,7 @@
-﻿using App.Domain.Entities;
+﻿using App.Domain.DTO;
+using App.Domain.Entities;
 using App.Domain.Interfaces.Application;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -21,9 +23,18 @@ namespace App.Api.Controllers
         }
 
         [HttpGet("ListaPessoas")]
-        public JsonResult ListaPessoas()
+        [AllowAnonymous]
+        public JsonResult ListaPessoas(string nome, int pesoMaiorQue, int pesoMenorQue)
         {
-            return Json(_service.listaPessoas());
+            try
+            {
+                var obj = _service.listaPessoas(nome, pesoMaiorQue, pesoMenorQue);
+                return Json(RetornoApi.Sucesso(obj));
+            }
+            catch (Exception ex)
+            {
+                return Json(RetornoApi.Erro(ex.Message));
+            }
         }
         [HttpGet("BuscarPorId")]
         public JsonResult BuscarPorId(Guid id)
